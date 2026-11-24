@@ -1,0 +1,56 @@
+id,devices,purpose,user_age,daily_hours,monthly_data_gb,age_years,daily_hours_clean,monthly_data_gb_clean
+ID001,Smartphone,Entertainment,4 years,8 hours,5 GB,,8.0,5.0
+ID002,Smartphone,Communication tool & learning media,18,7,50 GB,18.0,7.0,50.0
+ID003,"Smartphone, Laptop, Tablet",Entertainment,18 years,6 hours,10 GB,18.0,6.0,10.0
+ID004,Smartphone,Communication,18,9 hours,20 GB,18.0,9.0,20.0
+ID005,Smartphone,Communication,18,6,Uses Wi-Fi,18.0,6.0,
+ID006,Smartphone,Communication,18,8,45,18.0,8.0,45.0
+ID007,"Smartphone, Laptop",Entertainment,17,8 hours,50,17.0,8.0,50.0
+ID008,Smartphone,Communication,18 years,1-2 hours,3-5 GB,18.0,1.5,4.0
+ID009,Smartphone,Communication,18,3-5 hours,50 GB,18.0,4.0,50.0
+ID010,"Smartphone, Laptop",Learning media,19,9,25,19.0,9.0,25.0
+ID011,Tablet,Entertainment,17,15,30,17.0,15.0,30.0
+ID012,Smartphone,Communication,18,16,20,18.0,16.0,20.0
+ID013,Laptop,Learning media,16,20,50,16.0,20.0,50.0
+ID014,Smartphone,All of the above,17,9,Uses Wi-Fi,17.0,9.0,
+ID015,Smartphone,Communication,18,6,15,18.0,6.0,15.0
+ID016,Tablet,Communication,19,17,28,19.0,17.0,28.0
+ID017,Smartphone,Communication,23,≤10,30 GB,23.0,,30.0
+ID018,Tablet,Entertainment,16,18,35,16.0,18.0,35.0
+ID019,Smartphone,Communication,18,13,18,18.0,13.0,18.0
+ID020,Smartphone,Communication,17,10,20,17.0,10.0,20.0
+ID021,Smartphone,Communication,19,6 hours,25 GB,19.0,6.0,25.0
+ID022,Smartphone,Learning media,17,15,12,17.0,15.0,12.0
+ID023,Smartphone,Communication,15,10,30,15.0,10.0,30.0
+ID024,Smartphone,Learning media,17,15,60,17.0,15.0,60.0
+ID025,"Smartphone, Laptop",Learning media,46,7,30,46.0,7.0,30.0
+ID026,"Laptop, Tablet",Learning media,19,20,80,19.0,20.0,80.0
+ID027,"Smartphone, Tablet",Entertainment,25,14,35,25.0,14.0,35.0
+ID028,Tablet,Learning media,18,20,65,18.0,20.0,65.0
+ID029,"Smartphone, Laptop",Communication,22,10,18,22.0,10.0,18.0
+ID030,Smartphone,Entertainment,17 years,8,2 GB,17.0,8.0,2.0
+ID031,Smartphone,Communication,19,6,120 GB,19.0,6.0,120.0
+ID032,Smartphone,Communication,18,6,6-Apr,18.0,6.0,
+ID033,"Smartphone, Laptop",Entertainment,18,10 hours,5 GB,18.0,10.0,5.0
+ID034,"Smartphone, Laptop",Learning media,19,24 hours,78 GB,19.0,24.0,78.0
+ID035,Smartphone,Learning media,18,6 hours,45 GB,18.0,6.0,45.0
+ID036,"Smartphone, Tablet",Entertainment,20 years,9 hours,55,20.0,9.0,55.0
+ID037,"Smartphone, Laptop",Entertainment,18 years,12 hours,75,18.0,12.0,75.0
+ID038,Smartphone,Learning media,19 years,7 hours,17 GB,19.0,7.0,17.0
+ID039,"Smartphone, Laptop",Learning media,19 years,10 hours,20 GB,19.0,10.0,20.0
+ID040,"Smartphone, Laptop",Learning media,17,14 hours,30 GB,17.0,14.0,30.0
+ID041,Smartphone,Entertainment,17,6 hours,35 GB,17.0,6.0,35.0
+ID042,Smartphone,Communication,19,7,-45,19.0,7.0,
+ID043,Smartphone,Communication,24,16,75,24.0,16.0,75.0
+ID044,Smartphone,Communication,18,7,9,18.0,7.0,9.0
+ID045,Smartphone,Communication,20 years,7 hours,25 GB,20.0,7.0,25.0
+ID046,"Smartphone, Laptop",Communication,19,9,15 GB,19.0,9.0,15.0
+ID047,Smartphone,Communication,19,2-4 hours,150 GB,19.0,3.0,150.0
+ID048,Smartphone,Communication,20,8-10 hours,80,20.0,9.0,80.0
+ID049,"Smartphone, Laptop",Communication,20,15,100,20.0,15.0,100.0
+ID050,Tablet,Communication,13,5,5,13.0,5.0,5.0
+ID051,Smartphone,Entertainment,18,10 hours,7 GB,18.0,10.0,7.0
+ID052,Smartphone,Entertainment,18,4 hours,40 GB,18.0,4.0,40.0
+ID053,Smartphone,Communication,,3 hours,15 GB,,3.0,15.0
+ID054,Smartphone,Communication,19,Maybe 5-6 hours,29,19.0,5.5,29.0
+ID055,Smartphone,Entertainment,20,6,10,20.0,6.0,10.0
