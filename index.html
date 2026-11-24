@@ -1,11 +1,177 @@
+from pathlib import Path
 
-<!DOCTYPE html>
-<html>
+html = r'''<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Technology Usage Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technology Usage Intelligence Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root{--bg:#070b18;--panel:#10182b;--panel2:#141f36;--line:#243451;--text:#eaf2ff;--muted:#91a4c4;--cyan:#00e5ff;--purple:#b65cff;--green:#39f5a5;--pink:#ff4fa3;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#172b50 0,transparent 32%),radial-gradient(circle at 90% 15%,#251542 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1500px;margin:auto;padding:26px}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:24px}.brand{display:flex;gap:14px;align-items:center}.logo{width:48px;height:48px;border:1px solid var(--cyan);border-radius:14px;display:grid;place-items:center;color:var(--cyan);font-size:24px;box-shadow:0 0 22px #00e5ff35}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--cyan);font-weight:800}.title{font-size:clamp(22px,3vw,32px);font-weight:800;margin:4px 0}.subtitle{color:var(--muted);font-size:13px}.status{border:1px solid #235b55;color:var(--green);background:#12352d66;padding:9px 13px;border-radius:30px;font-size:12px}
+.panel{background:linear-gradient(145deg,#121d33f2,#0d1527f2);border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:0 12px 35px #0005}.section-title{font-size:14px;font-weight:800;letter-spacing:.5px;margin:0 0 14px}.filters{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px}.field label{display:block;color:var(--muted);font-size:11px;margin:0 0 7px}.field select,.field input{width:100%;background:#091225;border:1px solid #2b3e60;color:var(--text);padding:11px;border-radius:10px;outline:none}.field select:focus,.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #00e5ff20}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin:17px 0}.kpi{position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;width:90px;height:90px;right:-35px;top:-40px;border-radius:50%;background:var(--glow);filter:blur(25px);opacity:.25}.kpi .label{font-size:11px;color:var(--muted)}.kpi .value{font-size:clamp(22px,3vw,30px);font-weight:800;margin:9px 0 4px}.kpi .note{font-size:10px;color:var(--muted)}.cyan{--glow:var(--cyan)}.purple{--glow:var(--purple)}.green{--glow:var(--green)}.pink{--glow:var(--pink)}.gold{--glow:var(--gold)}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:15px}.chartbox{height:330px;position:relative}.charthead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.charthead select{background:#091225;border:1px solid #2b3e60;color:var(--text);padding:8px;border-radius:8px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.summary .mini{background:#0a1427;border:1px solid #243653;border-radius:12px;padding:13px}.mini small{display:block;color:var(--muted);font-size:10px}.mini strong{display:block;margin-top:7px;font-size:16px}
+.tablewrap{overflow:auto;max-height:430px;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:700px;font-size:12px}th{position:sticky;top:0;background:#182642;color:var(--cyan);text-align:left;padding:12px;z-index:1}td{padding:10px 12px;border-top:1px solid #202f49;color:#d5e1f5}tr:hover td{background:#17243b}
+.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid #2d5472;background:#10263a;color:var(--cyan);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}.btn:hover{background:#173b52}.btn.primary{background:linear-gradient(90deg,#006b82,#58318b);border:0;color:white}.muted{color:var(--muted);font-size:12px}.notice{padding:12px;border-radius:10px;background:#382b13;border:1px solid #806128;color:#ffdc8a;font-size:12px;line-height:1.5;margin-top:12px}.footer{text-align:center;color:#657998;font-size:11px;padding:24px}
+@media(max-width:950px){.kpis{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}.filters{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.wrap{padding:14px}.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.chartbox{height:280px}}
+</style>
 </head>
 <body>
-    <h1>Technology Usage Intelligence Dashboard</h1>
-    <p>Cyber Neon Analytics</p>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><div class="logo">⌁</div><div><div class="eyebrow">DATA INTELLIGENCE • ANALYTICS</div><div class="title">Technology Usage Dashboard</div><div class="subtitle">Cyber Neon Analytics · Survey insights and usage patterns</div></div></div>
+ <div class="status" id="status">● INITIALIZING DASHBOARD</div>
+</header>
+
+<section class="panel">
+ <h2 class="section-title">⌘ DATA FILTERS</h2>
+ <div class="filters">
+  <div class="field"><label>DEVICE</label><select id="deviceFilter"><option value="">All devices</option></select></div>
+  <div class="field"><label>PURPOSE</label><select id="purposeFilter"><option value="">All purposes</option></select></div>
+  <div class="field"><label>ANALYSIS VARIABLE</label><select id="variable"><option value="Age">Age</option><option value="Daily Usage (Hours)">Daily Usage (Hours)</option><option value="Monthly Data (GB)">Monthly Data (GB)</option><option value="Device">Device</option><option value="Purpose">Purpose</option></select></div>
+  <div class="field"><label>CHART TYPE</label><select id="chartType"><option value="auto">Automatic</option><option value="bar">Ranking / Bar</option><option value="hist">Histogram</option><option value="box">Boxplot summary</option><option value="scatter">Scatter plot</option><option value="correlation">Correlation</option></select></div>
+ </div>
+ <div class="muted" style="margin-top:12px">Filters and charts update automatically when the selection changes.</div>
+ <div id="loadNotice" class="notice">Loading dataset from the repository… If automatic loading fails, use the Upload CSV button below.</div>
+ <div class="actions" style="margin-top:12px"><button class="btn" id="uploadBtn">＋ Upload CSV</button><input type="file" id="csvInput" accept=".csv,text/csv" hidden><button class="btn" id="resetBtn">↺ Reset filters</button><button class="btn primary" id="downloadBtn">⇩ Download filtered CSV</button></div>
+</section>
+
+<section class="kpis">
+ <div class="panel kpi cyan"><div class="label">TOTAL RESPONDENTS</div><div class="value" id="totalKpi">—</div><div class="note">Rows in current filter</div></div>
+ <div class="panel kpi purple"><div class="label">VALID OBSERVATIONS</div><div class="value" id="validKpi">—</div><div class="note">Non-empty numeric values</div></div>
+ <div class="panel kpi green"><div class="label">MEAN</div><div class="value" id="meanKpi">—</div><div class="note">Arithmetic average</div></div>
+ <div class="panel kpi pink"><div class="label">MEDIAN</div><div class="value" id="medianKpi">—</div><div class="note">Middle observation</div></div>
+ <div class="panel kpi gold"><div class="label">STD. DEVIATION</div><div class="value" id="sdKpi">—</div><div class="note">Sample standard deviation</div></div>
+</section>
+
+<section class="grid">
+ <div class="panel"><div class="charthead"><h2 class="section-title">▥ VARIABLE DISTRIBUTION</h2><span class="muted" id="chartCaption">Current selection</span></div><div class="chartbox"><canvas id="mainChart"></canvas></div></div>
+ <div class="panel"><h2 class="section-title">◈ RESPONDENT PROFILE</h2><div class="chartbox"><canvas id="profileChart"></canvas></div></div>
+ <div class="panel"><h2 class="section-title">⌖ QUICK INSIGHTS</h2><div class="summary"><div class="mini"><small>HIGHEST CATEGORY / VALUE</small><strong id="highest">—</strong></div><div class="mini"><small>LOWEST CATEGORY / VALUE</small><strong id="lowest">—</strong></div><div class="mini"><small>MOST COMMON DEVICE</small><strong id="topDevice">—</strong></div></div><p class="muted" id="insightText" style="line-height:1.6;margin-top:14px">Insights will appear after the dataset is loaded.</p></div>
+ <div class="panel"><h2 class="section-title">◎ DATA QUALITY</h2><div class="summary"><div class="mini"><small>ROWS WITH MISSING AGE</small><strong id="missingAge">—</strong></div><div class="mini"><small>ROWS WITH MISSING DAILY USAGE</small><strong id="missingDaily">—</strong></div><div class="mini"><small>ROWS WITH MISSING MONTHLY DATA</small><strong id="missingMonthly">—</strong></div></div><p class="muted" style="line-height:1.6;margin-top:14px">Missing values are not treated as zero. Numeric summaries use valid observations only.</p></div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+ <div class="charthead"><div><h2 class="section-title">▤ RESPONDENT DATA TABLE</h2><div class="muted" id="tableInfo">No data loaded</div></div><div class="actions"><input id="searchTable" placeholder="Search table…" style="background:#091225;border:1px solid #2b3e60;color:white;padding:9px;border-radius:9px"></div></div>
+ <div class="tablewrap" style="margin-top:12px"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+</section>
+<div class="footer">TECHNOLOGY USAGE INTELLIGENCE · CYBER NEON ANALYTICS</div>
+</div>
+<script>
+const DATA_FILE = 'Technology_Usage_Cleaned%20(1).csv';
+let rawRows=[], filteredRows=[], headers=[], mainChart=null, profileChart=null;
+const $=id=>document.getElementById(id);
+const palette=['#00e5ff','#b65cff','#39f5a5','#ff4fa3','#ffd166','#5e9bff','#ff8b5e'];
+function norm(s){return String(s??'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
+function findHeader(keys){
+ const pairs=headers.map(h=>[h,norm(h)]);
+ for(const key of keys){const k=norm(key);let exact=pairs.find(x=>x[1]===k);if(exact)return exact[0];let partial=pairs.find(x=>x[1].includes(k));if(partial)return partial[0]}
+ return null;
+}
+function numberValue(v){if(v===null||v===undefined||String(v).trim()==='')return null;let s=String(v).trim().replace(',','.');if(/wifi|wi fi|≤|<=|unknown|n a|^-$|^—$/i.test(s))return null;let range=s.match(/(-?\d+(?:\.\d+)?)\s*(?:-|–|to|sampai)\s*(-?\d+(?:\.\d+)?)/i);let n=range?(Number(range[1])+Number(range[2]))/2:Number((s.match(/-?\d+(?:\.\d+)?/)||[])[0]);return Number.isFinite(n)&&n>=0?n:null}
+const col={
+ id:()=>findHeader(['ID','Respondent ID']),
+ device:()=>findHeader(['Frequently Used Devices','Device','Devices']),
+ purpose:()=>findHeader(['Purpose of Use','Purpose']),
+ age:()=>findHeader(['User Age','Age']),
+ daily:()=>findHeader(['Time Spent per Day (hours)','Daily Usage (Hours)','Daily Usage','Time Spent per Day']),
+ monthly:()=>findHeader(['Monthly Data Usage (GB)','Monthly Data (GB)','Monthly Data Usage'])
+};
+function getVal(r,type){let h=col[type]();return h?r[h]:''}
+function displayNum(v){return v===null||!Number.isFinite(v)?'—':Number(v).toLocaleString(undefined,{maximumFractionDigits:2})}
+function mean(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null}
+function median(a){if(!a.length)return null;let b=[...a].sort((x,y)=>x-y),m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2}
+function sd(a){if(a.length<2)return null;let m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length-1))}
+function values(rows,type){return rows.map(r=>numberValue(getVal(r,type))).filter(v=>v!==null)}
+function unique(list){return [...new Set(list.map(x=>String(x??'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b))}
+function fillSelect(id,items,label){let el=$(id),old=el.value;el.innerHTML=`<option value="">All ${label}</option>`+items.map(x=>`<option>${escapeHtml(x)}</option>`).join('');if(items.includes(old))el.value=old}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function loadRows(rows){
+ rawRows=rows.filter(r=>r&&Object.values(r).some(v=>String(v??'').trim()!==''));headers=Object.keys(rawRows[0]||{});
+ if(!rawRows.length){$('status').textContent='● NO DATA';return}
+ fillSelect('deviceFilter',unique(rawRows.map(r=>getVal(r,'device'))),'devices');
+ fillSelect('purposeFilter',unique(rawRows.map(r=>getVal(r,'purpose'))),'purposes');
+ $('status').textContent=`● DATA LOADED · ${rawRows.length} ROWS`;
+ $('loadNotice').textContent=`Dataset loaded successfully: ${rawRows.length} respondents.`;
+ $('loadNotice').className='muted';
+ update();
+}
+function applyFilters(){
+ const d=$('deviceFilter').value,p=$('purposeFilter').value;
+ filteredRows=rawRows.filter(r=>(!d||String(getVal(r,'device')).trim()===d)&&(!p||String(getVal(r,'purpose')).trim()===p));
+}
+function counts(rows,type){let m={};rows.forEach(r=>{let v=String(getVal(r,type)||'Not specified').trim();m[v]=(m[v]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1])}
+function setKpis(){
+ let a=values(filteredRows,'age'),total=filteredRows.length;
+ $('totalKpi').textContent=total.toLocaleString();$('validKpi').textContent=a.length.toLocaleString();
+ $('meanKpi').textContent=displayNum(mean(a));$('medianKpi').textContent=displayNum(median(a));$('sdKpi').textContent=displayNum(sd(a));
+ $('missingAge').textContent=(total-values(filteredRows,'age').length).toLocaleString();
+ $('missingDaily').textContent=(total-values(filteredRows,'daily').length).toLocaleString();
+ $('missingMonthly').textContent=(total-values(filteredRows,'monthly').length).toLocaleString();
+ let dev=counts(filteredRows,'device'),pur=counts(filteredRows,'purpose');
+ $('topDevice').textContent=dev[0]?`${dev[0][0]} (${dev[0][1]})`:'—';
+ $('insightText').textContent=dev[0]?`The most frequently reported device is ${dev[0][0]}, with ${dev[0][1]} respondents. The most common purpose is ${pur[0]?.[0]||'not available'}. Numeric summaries are calculated from valid age observations.`:'No category data available for the current filters.';
+}
+function chartOptions(){return {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#cbd8ee'}},tooltip:{backgroundColor:'#10182b',borderColor:'#355174',borderWidth:1}},scales:{x:{ticks:{color:'#9eb0cb'},grid:{color:'#23324a'}},y:{ticks:{color:'#9eb0cb'},grid:{color:'#23324a'}}}}}
+function destroy(c){if(c)c.destroy()}
+function renderMain(){
+ let variable=$('variable').value,type=$('chartType').value, numeric=variable==='Age'?'age':variable==='Daily Usage (Hours)'?'daily':variable==='Monthly Data (GB)'?'monthly':null;
+ let labels=[],data=[],chartType='bar',caption='';
+ if(numeric){
+  let a=values(filteredRows,numeric);caption=`${a.length} valid numeric observations`;
+  if(type==='scatter'||type==='correlation'){
+   let other=numeric==='age'?'daily':'age',x=[],y=[];filteredRows.forEach(r=>{let xx=numberValue(getVal(r,numeric)),yy=numberValue(getVal(r,other));if(xx!==null&&yy!==null){x.push(xx);y.push(yy)}});
+   labels=x.map((v,i)=>i+1);data=x.map((v,i)=>({x:v,y:y[i]}));chartType='scatter';caption=`${data.length} paired observations · X: ${variable} · Y: ${other==='age'?'Age':'Daily Usage (Hours)'}`;
+  }else if(type==='hist'||(type==='auto'&&numeric)){
+   let bins=8;if(a.length){let min=Math.min(...a),max=Math.max(...a),width=(max-min)/bins||1;let b=Array(bins).fill(0);a.forEach(v=>b[Math.min(bins-1,Math.floor((v-min)/width))]++);labels=b.map((_,i)=>`${displayNum(min+i*width)}–${displayNum(min+(i+1)*width)}`);data=b}else{labels=['No valid data'];data=[0]}chartType='bar';caption='Histogram · grouped numeric values';
+  }else if(type==='box'){
+   let sorted=[...a].sort((x,y)=>x-y);let q=p=>sorted.length?sorted[Math.floor((sorted.length-1)*p)]:0;labels=['Minimum','Q1','Median','Q3','Maximum'];data=[q(0),q(.25),q(.5),q(.75),q(1)];caption='Five-number summary (boxplot statistics)';
+  }else{
+   let b=counts(filteredRows,variable==='Device'?'device':'purpose').slice(0,12);labels=b.map(x=>x[0]);data=b.map(x=>x[1]);caption='Category ranking';
+  }
+ }else{
+  let b=counts(filteredRows,variable==='Device'?'device':'purpose').slice(0,12);labels=b.map(x=>x[0]);data=b.map(x=>x[1]);caption='Category frequency ranking';
+  if(type==='scatter'||type==='correlation'){caption='Choose a numeric variable for scatter or correlation analysis.'}
+ }
+ $('chartCaption').textContent=caption;destroy(mainChart);
+ const ctx=$('mainChart').getContext('2d');
+ if(chartType==='scatter'){
+  mainChart=new Chart(ctx,{type:'scatter',data:{datasets:[{label:'Respondents',data,backgroundColor:'#00e5ff',borderColor:'#00e5ff'}]},options:chartOptions()});
+ }else{
+  mainChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:numeric?'Observation count / value':'Respondents',data,backgroundColor:labels.map((_,i)=>palette[i%palette.length]+'bb'),borderColor:labels.map((_,i)=>palette[i%palette.length]),borderWidth:1,borderRadius:6}]},options:{...chartOptions(),indexAxis:'x'}});
+ }
+ let sorted=numeric?values(filteredRows,numeric).sort((a,b)=>a-b):counts(filteredRows,variable==='Device'?'device':'purpose').map(x=>x[1]);
+ $('highest').textContent=sorted.length?displayNum(sorted[sorted.length-1]):'—';$('lowest').textContent=sorted.length?displayNum(sorted[0]):'—';
+}
+function renderProfile(){
+ let c=counts(filteredRows,'purpose').slice(0,7);destroy(profileChart);
+ profileChart=new Chart($('profileChart'),{type:'doughnut',data:{labels:c.map(x=>x[0]),datasets:[{data:c.map(x=>x[1]),backgroundColor:palette,borderColor:'#10182b',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#cbd8ee',boxWidth:10,padding:12,font:{size:10}}}}}});
+}
+function renderTable(){
+ let q=$('searchTable').value.toLowerCase(),rows=filteredRows.filter(r=>headers.some(h=>String(r[h]??'').toLowerCase().includes(q)));
+ $('tableInfo').textContent=`Showing ${Math.min(rows.length,100)} of ${rows.length} matching rows`;
+ $('tableHead').innerHTML='<tr>'+headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr>';
+ $('tableBody').innerHTML=rows.slice(0,100).map(r=>'<tr>'+headers.map(h=>`<td>${escapeHtml(r[h])}</td>`).join('')+'</tr>').join('');
+}
+function update(){applyFilters();setKpis();renderMain();renderProfile();renderTable()}
+function parseFile(file){Papa.parse(file,{header:true,skipEmptyLines:true,dynamicTyping:false,complete:r=>loadRows(r.data),error:e=>{$('loadNotice').textContent='Could not read CSV: '+e.message}})}
+$('uploadBtn').onclick=()=>$('csvInput').click();
+$('csvInput').onchange=e=>{if(e.target.files[0])parseFile(e.target.files[0])};
+['deviceFilter','purposeFilter','variable','chartType'].forEach(id=>$(id).addEventListener('change',update));
+$('searchTable').addEventListener('input',renderTable);
+$('resetBtn').onclick=()=>{$('deviceFilter').value='';$('purposeFilter').value='';$('variable').value='Age';$('chartType').value='auto';$('searchTable').value='';update()};
+$('downloadBtn').onclick=()=>{if(!filteredRows.length){alert('No data to download.');return}let csv=Papa.unparse(filteredRows);let blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Technology_Usage_Filtered.csv';a.click();URL.revokeObjectURL(a.href)};
+fetch(DATA_FILE).then(r=>{if(!r.ok)throw new Error('CSV not found');return r.text()}).then(t=>{let p=Papa.parse(t,{header:true,skipEmptyLines:true});loadRows(p.data)}).catch(()=>{$('status').textContent='● AWAITING CSV';$('loadNotice').innerHTML='Automatic CSV loading did not work. Click <b>Upload CSV</b> and select <b>Technology_Usage_Cleaned (1).csv</b> from your computer. Check that the CSV file is also in the repository root.'});
+</script>
 </body>
-</html>
+</html>'''
+
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created {path} ({path.stat().st_size:,} bytes)")
